@@ -3,122 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج الـ 90 يوم الصحي</title>
+    <title>برنامجي الصحي</title>
     <style>
-        :root {
-            --bg-color: #121214;
-            --card-color: #1a1a1e;
-            --text-color: #ffffff;
-            --text-muted: #a0a0a5;
-            --accent-sport: #00ffcc;
-            --accent-food: #ff9f43;
-            --accent-done: #2ecc71;
+        body { font-family: sans-serif; background-color: #121214; color: #ffffff; padding: 20px; text-align: center; }
+        .box { background: #1a1a1e; border: 1px solid #333; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: right; display: flex; justify-content: space-between; align-items: center; }
+        .title { color: #00ffcc; font-size: 22px; margin-bottom: 20px; }
+        .sub { color: #a0a0a5; font-size: 14px; margin-bottom: 20px; }
+        .check { width: 25px; height: 25px; border: 2px solid #a0a0a5; border-radius: 50%; display: inline-block; cursor: pointer; }
+        .done .check { background: #2ecc71; border-color: #2ecc71; }
+        .done .check::after { content: "✓"; color: #000; font-weight: bold; display: block; text-align: center; line-height: 22px; }
+        .done .text { text-decoration: line-through; color: #666; }
+        .btn { background: #2ecc71; color: #000; padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; width: 100%; margin-top: 20px; }
+        .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <div class="title" id="dayTitle">جلسة رقم 1 من 90</div>
+    <div class="sub" id="levelTitle">المستوى: الشهر الأول (تثبيت الحركات)</div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">تمارين الظهر والأكتاف (قاعدة)</strong><br><small id="t1" style="color:#a0a0a5">3 مجموعات × 10 تكرارات</small></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">تمارين الصدر والذراعين (قاعدة)</strong><br><small id="t2" style="color:#a0a0a5">3 مجموعات × 10 تكرارات</small></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">تمرين الأفخاذ والمؤخرة (Bridge)</strong><br><small style="color:#a0a0a5">3 مجموعات × 8 تكرارات</small></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">تمرين القلب والشرايين</strong><br><small id="t3" style="color:#a0a0a5">مشي خفيف في الغرفة 10 دقائق</small></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">بيضة مسلوقة واحدة</strong></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">ملعقة كبيرة زيت زيتون</strong></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">ثمرة فاكهة واحدة</strong></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">كوب لبن رايب</strong></div>
+        <div class="check"></div>
+    </div>
+
+    <div class="box" onclick="toggle(this)">
+        <div><strong class="text">وجبة البروتين الرئيسية</strong></div>
+        <div class="check"></div>
+    </div>
+
+    <button class="btn" id="nextBtn" onclick="nextDay()" disabled>الجلسة التالية ▶</button>
+
+<script>
+    let day = parseInt(localStorage.getItem('app_day')) || 1;
+
+    function updateUI() {
+        document.getElementById('dayTitle').innerText = `جلسة رقم ${day} من 90`;
+        if(day <= 30) {
+            document.getElementById('levelTitle').innerText = "المستوى: الشهر الأول (تثبيت الحركات)";
+            document.getElementById('t1').innerText = "3 مجموعات × 10 تكرارات";
+            document.getElementById('t2').innerText = "3 مجموعات × 10 تكرارات";
+            document.getElementById('t3').innerText = "مشي خفيف في الغرفة 10 دقائق";
+        } else {
+            document.getElementById('levelTitle').innerText = "المستوى: الشهر الثاني والثالث (التقوية)";
+            document.getElementById('t1').innerText = "3 مجموعات × 12 تكراراً";
+            document.getElementById('t2').innerText = "3 مجموعات × 12 تكراراً";
+            document.getElementById('t3').innerText = "مشي خفيف في الغرفة 15 دقيقة";
         }
+        document.querySelectorAll('.box').forEach(b => b.classList.remove('done'));
+        document.getElementById('nextBtn').disabled = true;
+    }
 
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+    function toggle(e) {
+        e.classList.toggle('done');
+        let total = document.querySelectorAll('.box').length;
+        let done = document.querySelectorAll('.done').length;
+        document.getElementById('nextBtn').disabled = (total !== done);
+    }
+
+    function nextDay() {
+        if(day < 90) {
+            day++;
+            localStorage.setItem('app_day', day);
+            updateUI();
+            window.scrollTo(0,0);
+        } else {
+            alert("مبروك إتمام الـ 90 يوماً! 🎉");
         }
-
-        .container {
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #2a2a30;
-            padding-bottom: 15px;
-        }
-
-        .session-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-sport);
-            margin: 5px 0;
-        }
-
-        .progress-text {
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            margin: 15px 0 10px 0;
-            padding-right: 5px;
-        }
-
-        .sport-title { color: var(--accent-sport); border-right: 3px solid var(--accent-sport); }
-        .food-title { color: var(--accent-food); border-right: 3px solid var(--accent-food); }
-
-        .item-card {
-            background-color: var(--card-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s;
-            border: 1px solid #222226;
-        }
-
-        .item-card:active {
-            background-color: #222228;
-        }
-
-        .item-info {
-            flex-grow: 1;
-            padding-left: 10px;
-        }
-
-        .item-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .item-details {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--text-muted);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .item-card.checked .checkbox {
-            background-color: var(--accent-done);
-            border-color: var(--accent-done);
-        }
-
-        .item-card.checked .checkbox::after {
-            content: "✓";
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .item-card.checked .item-name {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .nav-buttons {
-            display:
+    }
+    updateUI();
+</script>
+</body>
+</html>
